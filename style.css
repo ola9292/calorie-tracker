@@ -1,0 +1,90 @@
+body{
+  background-color: ghostwhite;
+}
+.container{
+        width: 50%;
+        margin: 100px auto;
+        padding: 30px;
+        border: 1px solid gray;
+        /* background-color: #fff; */
+}
+.add-input{
+  display: grid;
+  place-items: center;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0, .4);
+}
+.heading{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.add-btn{
+  background-color: #dc3545;
+  border-radius: 5px;
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+}
+.add-input-inner{
+  position: relative;
+  border:1px solid black;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 30px 20px 20px;
+  background-color: #dddddd;
+  
+}
+.close-modal{
+  position: absolute;
+  top:0;
+  right: 7px;
+  color: purple;
+}
+.goal-met-banner{
+  display: grid;
+  place-items: center;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0, .4);
+}
+.banner-inner{
+  position: relative;
+  border:1px solid black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 30px 20px 20px;
+  background-color: #dddddd;
+}
+.progress{
+  margin: 20px 0;
+}
+
+table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    @media only screen and (max-width: 600px) {
+            .container{
+              width: 100%;
+              margin:20px auto;
+              padding: 30px;
+              border: none
+          }
+      }

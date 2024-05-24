@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="style.css">
+        <title>Calorie Tracker</title>
+</head>
+<body>
+        <div id="app">
+            <div class="container">
+                <div class="heading">
+                        <h3 style="color: #dc3545">Calorie Tracker</h3>
+                        <button class="add-btn" @click="openModal = true">Add Item</button>
+                </div>
+                
+                <div class="add-input" v-if="openModal">
+                        <div class="add-input-inner">
+                                <input type="text" v-model="form.food" placeholder="food">
+                                <input type="text" v-model="form.calorie" placeholder="calorie">
+                                <button @click.prevent="add" :disabled="goal_met">Save Item</button>
+                                <span class="close-modal" @click="openModal = false">X</span>
+                        </div>  
+                </div>
+                
+                <!-- goal met modal -->
+                <div class="goal-met-banner" v-if="showEndModal">
+                        <div class="banner-inner">
+                                <p>You've had enough food for today, go to the Gym!</p>
+                                <span class="close-modal" @click="showEndModal = false">X</span>
+                        </div>
+                </div>
+                
+                <div class="w3-light-grey progress">
+                        <div class="w3-blue" style="height:24px;" :style="{ width: currentPercentage + '%'}">{{ currentPercentage }}%</div>
+                </div>
+                <table>
+                        <tr>
+                                <th>Food Item</th>
+                                <th>Calories</th>
+                        </tr>
+                        <tr v-for="(foo, index) in foodArr" @click="remove(index)">
+                             <td>{{ foo.food }}</td>
+                             <td>{{ foo.calorie }}</td>
+                        </tr>
+                </table>
+                <p v-if="calorieCount > 0">Total Calorie Count:{{ calorieCount }}</p>
+                <p>{{calorieCountMsg}}</p>
+            </div>
+                
+        </div>
+
+<script>
+  const { createApp } = Vue
+
+  createApp({
+    data() {
+      return {
+        message: 'Hello Vue!',
+        calorieCount: 0,
+        calorieCountMsg:'',
+        currentPercentage:0,
+        goal:2000,
+        openModal:false,
+        goal_met:false,
+        showEndModal:false,
+        foodArr:[{
+                food:'rice',
+                calorie:200
+        }],
+        form:{
+                food:'',
+                calorie:''
+        }
+      }
+    },
+    methods:{
+        add(){
+                if(this.form.food != '' && this.form.calorie != ''){
+                        this.foodArr.push({...this.form})
+                        this.form.food = '';
+                        this.form.calorie = '';
+
+                        this.updateCalorieCount();
+                        // Save to local storage
+                        this.saveToLocalStorage();
+                }else{
+                        alert('enter food and calorie!')
+                }
+            
+        },
+        remove(index){
+                this.foodArr.splice(index, 1);
+                this.updateCalorieCount();
+                this.saveToLocalStorage();
+        },
+        updateCalorieCount() {
+            this.calorieCount = 0;
+            for (let i = 0; i < this.foodArr.length; i++) {
+                this.calorieCount += Number(this.foodArr[i].calorie);
+            }
+            this.currentPercentage = (this.calorieCount / this.goal) * 100;
+            this.currentPercentage = this.currentPercentage.toFixed(1);
+
+            if (this.currentPercentage >= 100) {
+                this.goal_met = true;
+                this.currentPercentage = 100;
+                this.calorieCountMsg = 'You have exceeded the limit';
+                setTimeout(() => {
+                    this.showEndModal = true;
+                }, 2000);
+            } else {
+                this.goal_met = false;
+                this.calorieCountMsg = '';
+                this.showEndModal = false;
+            }
+        },
+        saveToLocalStorage() {
+            localStorage.setItem('foodArr', JSON.stringify(this.foodArr));
+            localStorage.setItem('calorieCount', this.calorieCount);
+            localStorage.setItem('currentPercentage', this.currentPercentage);
+            localStorage.setItem('goal_met', this.goal_met);
+            localStorage.setItem('calorieCountMsg', this.calorieCountMsg);
+        },
+        loadFromLocalStorage() {
+            if (localStorage.getItem('foodArr')) {
+                this.foodArr = JSON.parse(localStorage.getItem('foodArr'));
+                this.calorieCount = Number(localStorage.getItem('calorieCount'));
+                this.currentPercentage = Number(localStorage.getItem('currentPercentage'));
+                this.goal_met = localStorage.getItem('goal_met') === 'true';
+                this.calorieCountMsg = localStorage.getItem('calorieCountMsg');
+            }
+        }
+      },
+      mounted(){
+        this.loadFromLocalStorage();
+      }
+  }).mount('#app')
+</script>
+</body>
+</html>
