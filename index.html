@@ -66,10 +66,7 @@
         goal_met:false,
         showEndModal:false,
         goal:2000,
-        foodArr:[{
-                food:'rice',
-                calorie:200
-        }],
+        foodArr:[],
         form:{
                 food:'',
                 calorie:''
@@ -85,7 +82,7 @@
                         
                         // Check if the potential new calorie count exceeds 2000
                         if (potentialNewCalorieCount > 2000) {
-                                alert('Too much calories, eat something else!');
+                                alert('Too much calories, Abort mission! ☠️');
                                 return; 
                         }
                                 this.foodArr.push({...this.form})
@@ -96,11 +93,11 @@
                                 // Save to local storage
                                 this.saveToLocalStorage();
                         }else{
-                                alert('enter food and calorie!')
+                                alert('enter food and calorie! 🙏🏿')
                         }
             
                 }else{
-                        alert('positive calories only');
+                        alert('positive calories only ✌🏿');
                 }
                 
         },
