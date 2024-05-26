@@ -87,4 +87,7 @@ table {
               padding: 30px;
               border: none
           }
+          .banner-inner{
+            width: 85%;
+          }
       }

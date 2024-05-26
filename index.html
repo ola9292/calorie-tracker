@@ -18,7 +18,7 @@
                 <div class="add-input" v-if="openModal">
                         <div class="add-input-inner">
                                 <input type="text" v-model="form.food" placeholder="food">
-                                <input type="text" v-model="form.calorie" placeholder="calorie">
+                                <input type="number" min="0" v-model="form.calorie" placeholder="calorie">
                                 <button @click.prevent="add" :disabled="goal_met">Save Item</button>
                                 <span class="close-modal" @click="openModal = false">X</span>
                         </div>  
@@ -27,7 +27,7 @@
                 <!-- goal met modal -->
                 <div class="goal-met-banner" v-if="showEndModal">
                         <div class="banner-inner">
-                                <p>You've had enough food for today, go to the Gym!</p>
+                                <p>You've had enough food for today, go to the Gym! 🤡</p>
                                 <span class="close-modal" @click="showEndModal = false">X</span>
                         </div>
                 </div>
@@ -45,7 +45,7 @@
                              <td>{{ foo.calorie }}</td>
                         </tr>
                 </table>
-                <p v-if="calorieCount > 0">Total Calorie Count:{{ calorieCount }}</p>
+                <p v-if="calorieCount > 0">Total Calorie Count:{{ calorieCount }} / {{goal}}</p>
                 <p>{{calorieCountMsg}}</p>
             </div>
                 
@@ -65,6 +65,7 @@
         openModal:false,
         goal_met:false,
         showEndModal:false,
+        goal:2000,
         foodArr:[{
                 food:'rice',
                 calorie:200
@@ -77,18 +78,31 @@
     },
     methods:{
         add(){
-                if(this.form.food != '' && this.form.calorie != ''){
-                        this.foodArr.push({...this.form})
-                        this.form.food = '';
-                        this.form.calorie = '';
+                if(this.form.calorie > 0){
+                        if(this.form.food != '' && this.form.calorie != ''){
+                        // Calculate the potential new calorie count if the item is added
+                        const potentialNewCalorieCount = this.calorieCount + Number(this.form.calorie);
+                        
+                        // Check if the potential new calorie count exceeds 2000
+                        if (potentialNewCalorieCount > 2000) {
+                                alert('Too much calories, eat something else!');
+                                return; 
+                        }
+                                this.foodArr.push({...this.form})
+                                this.form.food = '';
+                                this.form.calorie = '';
 
-                        this.updateCalorieCount();
-                        // Save to local storage
-                        this.saveToLocalStorage();
-                }else{
-                        alert('enter food and calorie!')
-                }
+                                this.updateCalorieCount();
+                                // Save to local storage
+                                this.saveToLocalStorage();
+                        }else{
+                                alert('enter food and calorie!')
+                        }
             
+                }else{
+                        alert('positive calories only');
+                }
+                
         },
         remove(index){
                 this.foodArr.splice(index, 1);
@@ -98,7 +112,10 @@
         updateCalorieCount() {
             this.calorieCount = 0;
             for (let i = 0; i < this.foodArr.length; i++) {
-                this.calorieCount += Number(this.foodArr[i].calorie);
+
+                        this.calorieCount += Number(this.foodArr[i].calorie);
+            
+               
             }
             this.currentPercentage = (this.calorieCount / this.goal) * 100;
             this.currentPercentage = this.currentPercentage.toFixed(1);
@@ -106,7 +123,7 @@
             if (this.currentPercentage >= 100) {
                 this.goal_met = true;
                 this.currentPercentage = 100;
-                this.calorieCountMsg = 'You have exceeded the limit';
+                this.calorieCountMsg = 'You have reached the limit, avoid big tummy! 😜';
                 setTimeout(() => {
                     this.showEndModal = true;
                 }, 2000);
