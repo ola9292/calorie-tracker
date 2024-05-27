@@ -109,13 +109,10 @@
         updateCalorieCount() {
             this.calorieCount = 0;
             for (let i = 0; i < this.foodArr.length; i++) {
-
-                        this.calorieCount += Number(this.foodArr[i].calorie);
-            
-               
+                        this.calorieCount += Number((this.foodArr[i].calorie).toFixed(2));
             }
             this.currentPercentage = (this.calorieCount / this.goal) * 100;
-            this.currentPercentage = this.currentPercentage.toFixed(1);
+            this.currentPercentage = this.currentPercentage.toFixed(2);
 
             if (this.currentPercentage >= 100) {
                 this.goal_met = true;
